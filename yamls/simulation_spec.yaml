@@ -1,0 +1,20 @@
+---
+All:
+- DefProb_best5_get5
+- EU_best5_get5
+- EU_best5_get5
+- EU_best5_get5
+- Trade_Def_best5_get5
+- all_0
+---
+sims_per_sample: 10.0
+nodes: 60.0
+events: 10000.0
+def_alpha: 1.0
+def_beta: 1.0
+buy_rates: random.paretovariate(2)
+buy_values: random.uniform(1,2)
+sell_costs: 1.0
+prices: c
+graph: CompleteGraph
+information: CompleteInformation
