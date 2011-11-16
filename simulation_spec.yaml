@@ -1,0 +1,13 @@
+--- 
+web parameters:
+  sims_per_sample: 1
+  nodes: 60
+  events: 10000
+  def_alpha: 1
+  def_beta: 1
+  buy_rates: random.paretovariate(2)
+  buy_values: random.uniform(1,2)
+  sell_costs: 1.0
+  prices: c
+  graph: ErdosRenyiGraph
+  information: BetaSamples_100_10_1
