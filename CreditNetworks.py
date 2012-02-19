@@ -54,7 +54,7 @@ class CreditNetwork(FlowNetwork):
 
 class EGTA_CreditNetwork(CreditNetwork):
 	"""Credit Network with all the trappings for EGTA simulation."""
-	def __init__(self, n=60, numEvents=10000, \
+	def __init__(self, n=60, numEvents=10000, numBanks=0, \
 			def_alpha=1, def_beta=1, \
 			graph_func=lambda n: ErdosRenyiGraph(n), \
 			rate_func=lambda b,s,g: R.pareto(2), \
@@ -62,21 +62,24 @@ class EGTA_CreditNetwork(CreditNetwork):
 			cost_func=lambda b,s,g: 1, \
 			price_func=lambda v,c: c, \
 			info_func=lambda c,d,cn: (cn.defaults[d],0), \
-			strategies=[lambda n,cn: []]):
+			strategies=[lambda n,cn: []], \
+			bank_strategy=lambda n,cn: []):
 		self._params = {"n":n, "numEvents":numEvents, "graph_func":graph_func, \
 				"rate_func":rate_func, "def_alpha":def_alpha, \
 				"def_beta":def_beta, "value_func":value_func, \
 				"cost_func":cost_func, "price_func":price_func, \
-				"info_func":info_func, "strategies":strategies}
-		self.graph = graph_func(n)
+				"info_func":info_func, "strategies":strategies, \
+				"numBanks":numBanks}
+		self.graph = graph_func(n + numBanks)
 		CreditNetwork.__init__(self, self.graph.nodes, [])
 		self.numEvents = numEvents
+		self.numBanks = numBanks
 		self.defaults = R.beta(def_alpha, def_beta, [n])
 		self.rates = zeros([n,n])
 		self.values = zeros([n,n])
 		self.costs = zeros([n,n])
 		self.payoffs = zeros(n)
-		for i,j in permutations(self.nodes, 2):
+		for i,j in permutations(self.nodes[:-numBanks], 2):
 			self.rates[i,j] = rate_func(i, j, self.graph)
 			self.values[i,j] = value_func(i, j, self.graph)
 			self.costs[i,j] = cost_func(i, j, self.graph)
@@ -84,11 +87,14 @@ class EGTA_CreditNetwork(CreditNetwork):
 		self.price_func = price_func
 		self.info_func = info_func
 		self.strategy_list = sorted(strategies)
-		self.node_strategies = dict(zip(R.permutation(list(self.nodes)), \
-				cycle(self.strategy_list)))
+		self.node_strategies = dict(zip(R.permutation(sorted( \
+				self.nodes)[:-numBanks]), cycle(self.strategy_list)))
 		for node, strategy in self.node_strategies.items():
 			for recipient, credit in strategy(node, self):
 				self.addEdge(WeightedEdge(node, recipient, credit))
+		for bank in self.nodes[-numBanks:]:
+			for recipient, credit in bank_strategy(bank, self):
+				self.addEdge(WeightedEdge(bank, recipient, credit))
 
 	def simulate(self):
 		for d in filter(lambda n: R.binomial(1, self.defaults[n]), self.nodes):
