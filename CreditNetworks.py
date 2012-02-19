@@ -83,9 +83,10 @@ class EGTA_CreditNetwork(CreditNetwork):
 		self.rates /= self.rates.sum()
 		self.price_func = price_func
 		self.info_func = info_func
-		self.strategies = dict(zip(R.permutation(list(self.nodes)), \
-				cycle(strategies)))
-		for node, strategy in self.strategies.items():
+		self.strategy_list = sorted(strategies)
+		self.node_strategies = dict(zip(R.permutation(list(self.nodes)), \
+				cycle(self.strategy_list)))
+		for node, strategy in self.node_strategies.items():
 			for recipient, credit in strategy(node, self):
 				self.addEdge(WeightedEdge(node, recipient, credit))
 
@@ -111,9 +112,8 @@ class EGTA_CreditNetwork(CreditNetwork):
 	#warning: gives s:0 if all agents playing strategy s defaulted
 	def getStrategyPayoffs(self):
 		sp = dict(((s.__name__, array([self.payoffs[a] for a in \
-				filter(lambda n: self.strategies[n]==s and n not in \
-				self.defaulters, self.nodes)])) for s in \
-				self.strategies.values()))
+				filter(lambda n: self.node_strategies[n]==s and n not in \
+				self.defaulters, self.nodes)])) for s in self.strategy_list))
 		return dict(((s, float(a.mean()) if len(a) > 0 else 0) for s,a in sp))
 
 
