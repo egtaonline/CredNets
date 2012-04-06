@@ -1,13 +1,16 @@
 --- 
 web parameters:
-  sims_per_sample: 1
-  nodes: 60
-  events: 10000
-  def_alpha: 1
-  def_beta: 1
-  buy_rates: random.paretovariate(2)
-  buy_values: random.uniform(1,2)
-  sell_costs: 1.0
-  prices: c
-  graph: ErdosRenyiGraph
-  information: BetaSamples_100_10_1
+  sims_per_sample: 10.0
+  events: 10000.0
+  def_alpha: 1.0
+  def_beta: 1.0
+  rate_alpha: 2.0
+  min_value: 1.0
+  max_value: 2.0
+  min_cost: 1.0
+  max_cost: 1.0
+  price: cost
+  social_network: CompleteGraph
+  def_samples: 100-10-1-0
+  num_banks: 1
+  bank_policy: agents2_banks10 
