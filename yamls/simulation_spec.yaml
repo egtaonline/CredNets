@@ -111,7 +111,7 @@ max_value: 2.0
 min_cost: 1.0
 max_cost: 1.0
 price: cost
-social_network: ERGd5
-def_samples: 100-10-1-0
+social_network: EmptyGraph
+def_samples: 1e10
 num_banks: 1
 bank_policy: agents2_banks10

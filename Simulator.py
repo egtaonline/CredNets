@@ -1,5 +1,5 @@
 #! /usr/bin/env python2.7
-#!/home/software/rhel5/python/2.6.4/bin/python
+#!/home/wellmangroup/opt/local/Python-2.7.2/python
 
 import CreditNetworks as CN
 
@@ -7,12 +7,9 @@ from argparse import ArgumentParser
 import sys
 try:
 	import yaml
-	import numpy
 except ImportError:
 	sys.path.append("/home/wellmangroup/lib64/python")
-	sys.path.append("/home/wellmangroup/opt/local/lib/python2.7/site-packages")
 	import yaml
-	import numpy
 
 
 def read_yaml(yaml_folder):
@@ -24,6 +21,7 @@ def read_yaml(yaml_folder):
 	parameters["role"] = strategies.keys()[0]
 	parameters["yaml_folder"] = yaml_folder
 	parameters["sims_per_sample"] = int(parameters["sims_per_sample"])
+	parameters["def_samples"] = str(parameters["def_samples"])
 	return parameters
 
 

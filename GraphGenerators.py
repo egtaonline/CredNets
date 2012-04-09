@@ -2,10 +2,18 @@ from Graphs import *
 
 from itertools import combinations
 from random import choice
-from numpy.random import multinomial, uniform
-from numpy import zeros
 from sys import modules
 from functools import partial
+
+try:
+	from numpy.random import multinomial, uniform
+	from numpy import zeros
+except ImportError:
+	from sys import path
+	path.append("/home/wellmangroup/opt/local/lib/python2.7/site-packages")
+	from numpy.random import multinomial, uniform
+	from numpy import zeros
+
 
 def ErdosRenyiGraph(n, p):
 	"""Each possible edge is included with probability p."""

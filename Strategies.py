@@ -2,7 +2,13 @@ from itertools import cycle
 from functools import partial
 from operator import ge, le
 
-from numpy.random import binomial
+try:
+	from numpy.random import binomial
+except ImportError:
+	from sys import path
+	path.append("/home/wellmangroup/opt/local/lib/python2.7/site-packages")
+	from numpy.random import binomial
+
 
 class AgentStrategies:
 	"""

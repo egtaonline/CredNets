@@ -6,3 +6,11 @@ yamls/payoff_data
 .CreditNetworks.py.swp
 
 .Simulator.py.swp
+
+CreditNetworks.pyc
+
+GraphGenerators.pyc
+
+Graphs.pyc
+
+Strategies.pyc
