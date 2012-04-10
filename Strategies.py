@@ -39,10 +39,12 @@ class AgentStrategies:
 		if d >= len(self.def_samples):
 			d = -1
 		num_samples = self.def_samples[d]
-		if num_samples > 0:
+		if 0 < num_samples < float('inf'):
 			pos_samples = binomial(num_samples, self.matrices["DP"][other])
-		else:
+		elif num_samples == 0:
 			pos_samples = num_samples = 0
+		else:
+			return self.TrueDefProb(agent, other)
 		return float(self.params["def_alpha"] + pos_samples) / float( \
 				self.params["def_alpha"] + self.params["def_beta"] + \
 				num_samples)
