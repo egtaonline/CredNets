@@ -22,6 +22,7 @@ def read_yaml(yaml_folder):
 	parameters["yaml_folder"] = yaml_folder
 	parameters["sims_per_sample"] = int(parameters["sims_per_sample"])
 	parameters["def_samples"] = str(parameters["def_samples"])
+	parameters["num_banks"] = int(parameters["num_banks"])
 	return parameters
 
 

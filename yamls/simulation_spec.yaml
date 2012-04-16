@@ -113,5 +113,5 @@ max_cost: 1.0
 price: cost
 social_network: EmptyGraph
 def_samples: inf
-num_banks: 1
+num_banks: 1.0
 bank_policy: agents2_banks10
