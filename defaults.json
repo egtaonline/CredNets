@@ -1,0 +1,17 @@
+{
+	"configuration":{
+		"events" : "10000",
+		"def_alpha" : "1",
+		"def_beta" : "9",
+		"rate_alpha" : "2",
+		"min_value" : "1",
+		"max_value" : "2",
+		"min_cost" : "1",
+		"max_cost" : "1",
+		"price" : "cost",
+		"social_network" : "EmptyGraph",
+		"def_samples" : "inf",
+		"num_banks" : "0",
+		"bank_policy" : "agents2_banks10"
+	}
+}
