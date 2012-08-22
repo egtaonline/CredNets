@@ -5,66 +5,61 @@ import CreditNetworks as CN
 
 from argparse import ArgumentParser
 import sys
-try:
-	import yaml
-except ImportError:
-	sys.path.append("/home/wellmangroup/lib64/python")
-	import yaml
+import json
 
 
-def read_yaml(yaml_folder):
-	f = open(yaml_folder + "/simulation_spec.yaml")
-	strategies, parameters = list(yaml.load_all(f))
-	f.close()
-	assert len(strategies) == 1, "credit network games must be symmetric"
-	parameters["strategies"] = strategies.values()[0]
-	parameters["role"] = strategies.keys()[0]
-	parameters["yaml_folder"] = yaml_folder
-	parameters["sims_per_sample"] = int(parameters["sims_per_sample"])
-	parameters["def_samples"] = str(parameters["def_samples"])
-	parameters["num_banks"] = int(parameters["num_banks"])
+def read_json(json_folder):
+	with open(json_folder + "/simulation_spec.json") as f:
+		simulator_input = json.load(f)
+	config = simulator_input["configuration"]
+	parameters = {}
+	parameters["role"] = simulator_input["assignment"].keys()[0]
+	parameters["strategies"] = simulator_input["assignment"].values()[0]
+	parameters["json_folder"] = json_folder
+	parameters["events"] = int(config["events"])
+	parameters["def_alpha"] = float(config["def_alpha"])
+	parameters["def_beta"] = float(config["def_beta"])
+	parameters["rate_alpha"] = float(config["rate_alpha"])
+	parameters["min_value"] = float(config["min_value"])
+	parameters["max_value"] = float(config["max_value"])
+	parameters["min_cost"] = float(config["min_cost"])
+	parameters["max_cost"] = float(config["max_cost"])
+	parameters["price"] = getattr(sys.modules[__name__], config["price"])
+	parameters["def_samples"] = str(config["def_samples"])
+	parameters["social_network"] = str(config["social_network"])
+	parameters["bank_policy"] = str(config["bank_policy"])
+	parameters["num_banks"] = int(config["num_banks"])
 	return parameters
 
 
 def parse_args():
 	parser = ArgumentParser()
-	parser.add_argument("yaml_folder", type=str)
+	parser.add_argument("json_folder", type=str)
 	parser.add_argument("samples", type=int)
 	args = parser.parse_args()
-	parameters = read_yaml(args.yaml_folder)
+	parameters = read_json(args.json_folder)
 	parameters["samples"] = args.samples
 	return parameters
 
 
 def run_simulator(parameters):
-	payoff_samples = []
-	for i in range(parameters["samples"]):
-		sample = {s:0 for s in parameters["strategies"]}
-		for j in range(parameters["sims_per_sample"]):
-			matrices = CN.InitMatrices(parameters)
-			crednet = CN.InitCrednet(matrices, parameters)
-			payoff_sim = CN.SimulateCreditNetwork(crednet, getattr( \
-					sys.modules[__name__], parameters["price"]), \
-					int(parameters["events"]), **matrices)
-			counts = {s:0 for s in parameters["strategies"]}
-			sim = {s:0 for s in parameters["strategies"]}
-			for n,s in enumerate(parameters["strategies"]):
-				if n in payoff_sim: # agent defaulted
-					sim[s] += float(payoff_sim[n])
-					counts[s] += 1
-			for s in sample:
-				if counts[s] > 0:
-					sample[s] += sim[s] / counts[s]
-		payoff_samples.append(sample)
-	return payoff_samples
+	matrices = CN.InitMatrices(parameters)
+	crednet = CN.InitCrednet(matrices, parameters)
+	return CN.SimulateCreditNetwork(crednet, parameters["price"], \
+			int(parameters["events"]), **matrices)
 
 
-def write_payoffs(payoff_samples, parameters):
-	payoff_file = open(parameters["yaml_folder"] + "/payoff_data", "w")
-	payoff_file.write("---\n")
-	payoff_file.write(yaml.dump_all([{parameters["role"]:payoff} for payoff \
-			in payoff_samples], default_flow_style=False))
-	payoff_file.close()
+def write_payoffs(payoffs, parameters, obs_name):
+	payoff_json = {"players":[]}
+	for player in payoffs.keys():
+		payoff_json["players"].append({"role":parameters["role"], \
+				"strategy":parameters["strategies"][player], "value": \
+				payoffs[player]})
+	payoff_json["features"] = {"defaults" : len(parameters["strategies"]) - \
+			len(payoffs)}
+	with open(parameters["json_folder"] + "/observation_" + obs_name + \
+			".json", "w") as payoff_file:
+		json.dump(payoff_json, payoff_file, indent=2)
 
 
 #price functions
@@ -72,9 +67,13 @@ cost = lambda v,c: c
 avg = lambda v,c: (v+c)/2.
 
 
-if __name__ == "__main__":
+def main():
 	parameters = parse_args()
-	payoff_samples = run_simulator(parameters)
-	write_payoffs(payoff_samples, parameters)
+	for i in range(parameters["samples"]):
+		payoffs = run_simulator(parameters)
+		write_payoffs(payoffs, parameters, str(i))
 
+
+if __name__ == "__main__":
+	main()
 
