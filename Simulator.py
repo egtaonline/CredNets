@@ -1,5 +1,5 @@
 #! /usr/bin/env python2.7
-#!/home/wellmangroup/opt/local/Python-2.7.2/python
+#!/home/software/rhel6/python/2.7.3/bin/python
 
 import CreditNetworks as CN
 

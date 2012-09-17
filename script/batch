@@ -1,3 +1,5 @@
 #!/bin/bash -login
 
+module load python
+
 /home/wellmangroup/many-agent-simulations/CredNets-2.1/CredNets/Simulator.py "$@"

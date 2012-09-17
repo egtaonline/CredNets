@@ -2,14 +2,8 @@ from Graphs import WeightedDirectedGraph, PathError
 import GraphGenerators as GG
 from Strategies import AgentStrategies, BankPolicies
 
-try:
-	from numpy import array, fill_diagonal
-	import numpy.random as R
-except ImportError:
-	from sys import path
-	path.append("/home/wellmangroup/opt/local/lib/python2.7/site-packages")
-	from numpy import array, fill_diagonal
-	import numpy.random as R
+from numpy import array, fill_diagonal
+import numpy.random as R
 
 
 class CreditError(Exception):
