@@ -1,6 +1,7 @@
 from itertools import cycle
 from functools import partial
 from operator import ge, le
+from random import sample
 
 try:
 	from numpy.random import binomial
@@ -83,6 +84,9 @@ class AgentStrategies:
 		return zip(cycle([agent]), filter(lambda other: comparator(\
 				criterion(agent, other), t), self.others(agent)), cycle([k]))
 
+	def random_n_get_k(self, agent, n, k):
+		return [(agent, other, k) for other in sample(self.others(agent), n)]
+
 	#explicit strategies
 	def all0(self, agent):
 		return []
@@ -103,6 +107,12 @@ class AgentStrategies:
 		if strategy.startswith("all"):
 			k = float(s[-1][3:])
 			strat = partial(self.all_k, k=k)
+
+		#generate randomn_getk strategies
+		if strategy.startswith("random"):
+			n = int(s[0][6:])
+			k = float(s[-1][3:])
+			strat = partial(self.random_n_get_k, n=n, k=k)
 
 		#generate criterion_lowestn_getk strategies
 		elif "lowest" in strategy and "get" in strategy:
