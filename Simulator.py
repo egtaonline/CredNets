@@ -52,7 +52,7 @@ def write_payoffs(payoffs, parameters, obs_name):
 	payoff_json = {"players":[]}
 	for player in payoffs.keys():
 		payoff_json["players"].append({"role":parameters["role"], \
-				"strategy":parameters["strategies"][player], "value": \
+				"strategy":parameters["strategies"][player], "payoff": \
 				payoffs[player], "features":{"defaulted":0}})
 	for p in set(range(len(parameters["strategies"]))) - set(payoffs.keys()):
 		payoff_json["players"].append({"role":parameters["role"], \
