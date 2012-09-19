@@ -1,5 +1,4 @@
 #! /usr/bin/env python2.7
-#!/home/software/rhel6/python/2.7.3/bin/python
 
 import CreditNetworks as CN
 
@@ -57,7 +56,7 @@ def write_payoffs(payoffs, parameters, obs_name):
 				payoffs[player], "features":{"defaulted":0}})
 	for p in set(range(len(parameters["strategies"]))) - set(payoffs.keys()):
 		payoff_json["players"].append({"role":parameters["role"], \
-				"strategy":parameters["strategies"][p], "value": \
+				"strategy":parameters["strategies"][p], "payoff": \
 				0, "features":{"defaulted":1}})
 	payoff_json["features"] = {"defaults" : len(parameters["strategies"]) - \
 			len(payoffs)}
