@@ -40,10 +40,13 @@ class CreditNetwork(WeightedDirectedGraph):
 		credit edge from sender to receiver is increased by amount.
 		"""
 		assert amount > 0
-		if self.weights[receiver, sender] < amount:
+		if not self.adjacent(receiver, sender) or \
+				self.weights[receiver, sender] < amount:
 			raise CreditError()
-		self.weights[(sender, receiver)] = self.weights.get((receiver, \
-				sender)) + amount
+		if not self.adjacent(sender, receiver):
+			self.addEdge(sender, receiver, amount)
+		else:
+			self.weights[(sender, receiver)] += amount
 		self.weights[(receiver, sender)] -= amount
 		if self.weights[(receiver, sender)] == 0:
 			self.removeEdge(receiver, sender)
