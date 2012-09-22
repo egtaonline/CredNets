@@ -65,6 +65,7 @@
 		]
 	},
 	"configuration":{
+		"sims_per_sample":10,
 		"events":"100000",
 		"def_alpha":"1",
 		"def_beta":"19",

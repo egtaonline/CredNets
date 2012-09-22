@@ -1,5 +1,6 @@
 {
 	"configuration":{
+		"sims_per_sample": "10",
 		"events" : "10000",
 		"def_alpha" : "1",
 		"def_beta" : "9",

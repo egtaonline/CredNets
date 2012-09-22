@@ -28,6 +28,7 @@ def read_json(json_folder):
 	parameters["social_network"] = str(config["social_network"])
 	parameters["bank_policy"] = str(config["bank_policy"])
 	parameters["num_banks"] = int(config["num_banks"])
+	parameters["sims_per_sample"] = int(config["sims_per_sample"])
 	return parameters
 
 
@@ -42,10 +43,18 @@ def parse_args():
 
 
 def run_simulator(parameters):
-	matrices = CN.InitMatrices(parameters)
-	crednet = CN.InitCrednet(matrices, parameters)
-	return CN.SimulateCreditNetwork(crednet, parameters["price"], \
-			int(parameters["events"]), **matrices)
+	n = len(parameters["strategies"])
+	payoffs = dict(zip(range(n), [0]*n))
+	for sim in range(parameters["sims_per_sample"]):
+		matrices = CN.InitMatrices(parameters)
+		crednet = CN.InitCrednet(matrices, parameters)
+		sim_payoffs = CN.SimulateCreditNetwork(crednet, parameters["price"], \
+				int(parameters["events"]), **matrices)
+		for agent, value in sim_payoffs.items():
+			payoffs[agent] += value
+	for agent in range(n):
+		payoffs[agent] /= parameters["sims_per_sample"]
+	return payoffs
 
 
 def write_payoffs(payoffs, parameters, obs_name):
