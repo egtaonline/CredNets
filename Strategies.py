@@ -23,7 +23,7 @@ class AgentStrategies:
 		self.social_network = social_network
 		self.params = params
 		self.nodes = sorted(social_network.nodes)
-		self.def_samples = map(float, params["def_samples"].split("-"))
+		self.def_samples = map(float, params["def_samples"].split(","))
 
 	def others(self, agent):
 		return self.social_network.nodes - {agent}

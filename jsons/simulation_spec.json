@@ -65,18 +65,18 @@
 		]
 	},
 	"configuration":{
-		"sims_per_sample":10,
+		"sims_per_sample":50,
 		"events":"100000",
 		"def_alpha":"1",
 		"def_beta":"19",
 		"rate_alpha":"2",
 		"min_value":"1",
-		"max_value":"3",
+		"max_value":"2",
 		"min_cost":"1",
 		"max_cost":"1",
-		"def_samples":"inf",
+		"def_samples":"100,10,1",
 		"price":"cost",
-		"social_network":"EmptyGraph",
+		"social_network":"ErdosRenyiGraph",
 		"bank_policy":"agents2_banks10",
 		"num_banks":"0"
 	}
