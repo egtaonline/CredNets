@@ -41,9 +41,12 @@ class Graph:
 		return sum([[(node, neighbor) for neighbor in self.edges[node]] for \
 				node in self.nodes], [])
 
+	def numEdges(self):
+		return sum(map(len, self.edges.values()))
+
 	def __repr__(self):
 		return self.__class__.__name__ + ': ' + str(len(self.nodes)) + \
-				' nodes, ' + str(sum(map(len, self.edges.values()))) + ' edges'
+				' nodes, ' + str(self.numEdges()) + ' edges'
 
 	def shortestPath(self, origin, destination, edgeCost=lambda src,dst: 1, \
 				heuristic=lambda src,dst: 0):
@@ -101,8 +104,11 @@ class UndirectedGraph(Graph):
 		self.edges[n2].add(n1)
 
 	def removeEdge(self, n1, n2):
-		self.edges[n1].remove(n1)
+		self.edges[n1].remove(n2)
 		self.edges[n2].remove(n1)
+	
+	def numEdges(self):
+		return Graph.numEdges(self)/2
 
 
 class DirectedGraph(Graph):

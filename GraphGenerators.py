@@ -10,7 +10,7 @@ from numpy import zeros
 
 
 def ErdosRenyiGraph(n, p=0.05):
-	"""Each possiblfe edge is included with probability p."""
+	"""Each possible edge is included with probability p."""
 	nodes = range(n)
 	edges = filter(lambda x: uniform(0,1) < p, combinations(nodes, 2))
 	return UndirectedGraph(nodes, edges)
@@ -71,6 +71,26 @@ def BAGd(n, d):
 for i in range(2,11):
 	setattr(modules[__name__], 'BAGd'+str(i), partial(BAGd, d=i))
 
+
+def WattsStrogatzGraph(n, k=4, p=0.1):
+	"""
+	Local connections on a ring lattice with random re-wirings.
+	
+	Parameters:
+	k = number of lattice neighbors each node begins with local connections to.
+	p = probability that each local connection gets re-wired to a new uniformly
+		chosen endpoint.
+	"""
+	nodes = range(n)
+	local_edges = []
+	for i in range(1,k/2+1):
+		local_edges.extend(zip(nodes, range(i,n) + range(i)))
+	g = UndirectedGraph(nodes, local_edges)
+	for e in local_edges:
+		if uniform() < p:
+			g.addEdge(e[0], choice(list(g.nodes - g.edges[e[0]] - {e[0]})))
+			g.removeEdge(*e)
+	return g
 
 
 def BalancedBinaryTree(n):
