@@ -1,6 +1,5 @@
 from heapq import heappush, heappop
 
-
 class PathError(Exception):
 	def __init__(self):
 		Exception.__init__(self, 'origin and destination are disconnected')
@@ -43,6 +42,13 @@ class Graph:
 
 	def numEdges(self):
 		return sum(map(len, self.edges.values()))
+
+	def adjacencyMatrix(self):
+		adj = [[0]*len(self.nodes) for i in range(len(self.nodes))]
+		for node in self.nodes:
+			for neighbor in self.edges[node]:
+				adj[node][neighbor] = 1
+		return adj
 
 	def __repr__(self):
 		return self.__class__.__name__ + ': ' + str(len(self.nodes)) + \
@@ -140,4 +146,11 @@ class WeightedDirectedGraph(DirectedGraph):
 	def allEdges(self):
 		return [(src, dst, self.edgeWeight(src, dst)) for src, dst in \
 				DirectedGraph.allEdges(self)]
+
+	def adjacencyMatrix(self):
+		adj = [[0]*len(self.nodes) for i in range(len(self.nodes))]
+		for node in self.nodes:
+			for neighbor in self.edges[node]:
+				adj[node][neighbor] = self.weights[(node, neighbor)]
+		return adj
 

@@ -18,3 +18,5 @@ Strategies.pyc
 jsons/observation_0.json
 
 *.swp
+
+*.pyc
