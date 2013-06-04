@@ -29,6 +29,8 @@ def read_json(json_folder):
 	parameters["bank_policy"] = str(config["bank_policy"])
 	parameters["num_banks"] = int(config["num_banks"])
 	parameters["sims_per_sample"] = int(config["sims_per_sample"])
+	parameters["prevent_zeros"] = True if config["prevent_zeros"] == "True" \
+									else False
 	return parameters
 
 
@@ -48,8 +50,7 @@ def run_simulator(parameters):
 	for sim in range(parameters["sims_per_sample"]):
 		matrices = CN.InitMatrices(parameters)
 		crednet = CN.InitCrednet(matrices, parameters)
-		sim_payoffs = CN.SimulateCreditNetwork(crednet, parameters["price"], \
-				int(parameters["events"]), **matrices)
+		sim_payoffs = CN.SimulateCreditNetwork(crednet, parameters, **matrices)
 		for agent, value in sim_payoffs.items():
 			payoffs[agent] += value
 	for agent in range(n):

@@ -13,6 +13,7 @@
 		"social_network" : "EmptyGraph",
 		"def_samples" : "inf",
 		"num_banks" : "0",
-		"bank_policy" : "agents2_banks10"
+		"bank_policy" : "agents2_banks10",
+		"prevent_zeros" : "True"
 	}
 }

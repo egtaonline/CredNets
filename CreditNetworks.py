@@ -1,9 +1,10 @@
-from Graphs import WeightedDirectedGraph, PathError
-import GraphGenerators as GG
+from Graphs.Graphs import WeightedDirectedGraph, PathError
+import Graphs.GraphGenerators as GG
 from Strategies import AgentStrategies, BankPolicies
 
 from numpy import array, fill_diagonal
 import numpy.random as R
+from random import choice
 
 
 class CreditError(Exception):
@@ -71,7 +72,7 @@ class CreditNetwork(WeightedDirectedGraph):
 			remaining = max(remaining - capacity, 0)
 
 
-def SimulateCreditNetwork(CN, price, events, DP, TR, BV, SC):
+def SimulateCreditNetwork(CN, params, DP, TR, BV, SC):
 	"""
 	CN - credit network
 	DP - default probability array
@@ -81,9 +82,24 @@ def SimulateCreditNetwork(CN, price, events, DP, TR, BV, SC):
 	price - function to determine a price from value and cost
 	events - number of transactions to simulate
 	"""
-	payoffs = dict([(n,0.) for n in CN.nodes])
+	price = params["price"]
+	events = params["events"]
+	strategies = params["strategies"]
+	prevent_zeros = params["prevent_zeros"]
 
+	payoffs = dict([(n,0.) for n in CN.nodes])
 	defaulters = filter(lambda n: R.binomial(1, DP[n]), CN.nodes)
+
+	# If all agents with the same strategy default, we'll get bad payoff data
+	while prevent_zeros:
+		prevent_zeros = False
+		for strat in set(strategies):
+			agents = filter(lambda a: strategies[a]==strat, CN.nodes)
+			if all([a in defaulters for a in agents]):
+				prevent_zeros = True
+				defaulters = filter(lambda n: R.binomial(1, DP[n]), CN.nodes)
+				break
+
 	for d in defaulters:
 		for n in CN.nodes:
 			if CN.adjacent(n, d):

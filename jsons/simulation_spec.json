@@ -65,7 +65,7 @@
 		]
 	},
 	"configuration":{
-		"sims_per_sample":50,
+		"sims_per_sample":10,
 		"events":"100000",
 		"def_alpha":"1",
 		"def_beta":"19",
@@ -78,6 +78,7 @@
 		"price":"cost",
 		"social_network":"ErdosRenyiGraph",
 		"bank_policy":"agents2_banks10",
-		"num_banks":"0"
+		"num_banks":"0",
+		"prevent_zeros":"True"
 	}
 }
